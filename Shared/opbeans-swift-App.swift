@@ -13,32 +13,11 @@
 //   limitations under the License.
 
 import SwiftUI
-import ElasticApm
-import OpenTelemetryApi
-import OpenTelemetrySdk
+import EmbraceIO
 
 class AppDelegate : NSObject, UIApplicationDelegate {
+
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
-        let decoder = JSONDecoder()
-        do {
-            let configJson = try Data(contentsOf:URL(fileURLWithPath: Bundle.main.path(forResource: "agent-conf", ofType: "json")!))
-            let agentConfig = try decoder.decode(AgentConfig.self, from: configJson)
-            let builder = AgentConfigBuilder()
-            if let url = URL(string: agentConfig.url ) {
-                _ = builder.withServerUrl(url)
-            }
-            if let token = agentConfig.token, !token.isEmpty {
-                _ = builder.withSecretToken(token)
-            }
-            
-            let config = builder
-              .build()
-          ElasticApmAgent.start(with: config)
-          
-          
-        } catch {
-            print(error)
-        }
         return true
     }
 }
@@ -48,7 +27,17 @@ struct ios_integration_testingApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     @StateObject private var modelData = ModelData()
     init() {
-    
+      do {
+          try EmbraceIO
+              .setup(
+                  options: EmbraceIO.Options.withAppId(
+                      "kdzxu"  // Your App ID from Embrace Dashboard
+                  )
+              )
+          try EmbraceIO.shared.start()
+      } catch let e {
+          print("Error starting Embrace \(e.localizedDescription)")
+      }
     }
     var body: some Scene {
         WindowGroup {

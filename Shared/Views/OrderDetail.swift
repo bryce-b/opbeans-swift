@@ -13,7 +13,7 @@
 //   limitations under the License.
 
 import SwiftUI
-import ElasticApm
+//import ElasticApm
 
 struct OrderDetail: View {
     var order : OrderLine
@@ -25,17 +25,18 @@ struct OrderDetail: View {
         return formatter.string(from: date)
     }
     var body: some View {
-        HStack {
-            Text(order.customer_name)
-            Spacer()
-            VStack(alignment: .trailing){
-                Text("#\(String(order.id))")
-
-                Text(self.date)
-                    .foregroundColor(.gray)
-                    .font(.caption)
-            }
-        }.reportName("Order Detail - view appearing")
+      HStack {
+        Text(order.customer_name)
+        Spacer()
+        VStack(alignment: .trailing){
+          Text("#\(String(order.id))")
+          
+          Text(self.date)
+            .foregroundColor(.gray)
+            .font(.caption)
+        }
+      }
+//        }.reportName("Order Detail - view appearing")
     }
    
 }

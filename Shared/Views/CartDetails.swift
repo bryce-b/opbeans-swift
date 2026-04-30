@@ -13,9 +13,9 @@
 //   limitations under the License.
 
 import SwiftUI
-import OpenTelemetrySdk
-import OpenTelemetryApi
-import ElasticApm
+//import OpenTelemetrySdk
+//import OpenTelemetryApi
+//import ElasticApm
 
 struct CartDetails: View {
     @EnvironmentObject var modelData : ModelData

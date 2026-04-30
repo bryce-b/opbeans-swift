@@ -13,8 +13,8 @@
 //   limitations under the License.
 
 import SwiftUI
-import OpenTelemetryApi
-import OpenTelemetrySdk
+//import OpenTelemetryApi
+//import OpenTelemetrySdk
 struct AdminMenu : View {
     @EnvironmentObject var modelData : ModelData
     

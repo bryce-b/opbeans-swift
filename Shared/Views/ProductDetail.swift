@@ -96,14 +96,15 @@ struct ProductDetail : View {
         }
         .ignoresSafeArea(edges:.top)
         .toolbar {
-            ToolbarItemGroup(placement: .navigationBarTrailing) {
-                Button(action:toggleCart) {
-                    Label("",systemImage: (modelData.cart.contains(where: { item in
-                        item.product == product
-                    })) ? "cart.badge.minus.fill" : "cart.badge.plus")
-                }.accessibilityLabel("CartToggle")
-            }
-        }.reportName("Product Detail - view appearing")
+          ToolbarItemGroup(placement: .navigationBarTrailing) {
+            Button(action:toggleCart) {
+              Label("",systemImage: (modelData.cart.contains(where: { item in
+                item.product == product
+              })) ? "cart.badge.minus.fill" : "cart.badge.plus")
+            }.accessibilityLabel("CartToggle")
+          }
+        }
+//        }.reportName("Product Detail - view appearing")
     }
 }
 
