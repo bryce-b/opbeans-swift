@@ -1,6 +1,6 @@
 # opbeans-swift
 
-An opbeans-based app for the iOS Agent. This project is intended to be used with [apm-integration-testing](https://github.com/elastic/apm-integration-testing) and the other opbeans applications.
+An opbeans-based app for the iOS Agent. This project is intended to be used with [opbeans-node](https://github.com/elastic/opbeans-node) (default port **3000**).
 
 ## Requirements
 
@@ -9,29 +9,14 @@ An opbeans-based app for the iOS Agent. This project is intended to be used with
 | **macOS** | Needed to build and run the iOS target. |
 | **Xcode** | Install from the Mac App Store or [Apple Developer](https://developer.apple.com/xcode/). Use a version compatible with this project’s Swift toolchain. |
 | **iOS Simulator** | At least one simulator runtime must be installed. In Xcode: **Settings → Platforms** (or **Xcode → Settings → Components** in older versions) and download an **iOS Simulator** for the OS version you want. Without a runtime, the app cannot run in Simulator. |
-| **opbeans-node** | The app expects the HTTP API on port **3000** by default (see configuration below). You can run it via Docker / apm-integration-testing or from the [opbeans-node](https://github.com/elastic/opbeans-node) repo (Node.js, PostgreSQL, Redis per that project’s README). |
-| **APM Server** (optional) | For traces/metrics to be sent to Elastic APM, configure `Shared/Resources/agent-conf.json`. Local stacks often use `http://localhost:8200`. |
+| **opbeans-node** | The app expects the HTTP API on port **3000** by default (see configuration below). See the [opbeans-node repository](https://github.com/elastic/opbeans-node) for Node.js, PostgreSQL, Redis, env vars, `npm run db-setup`, and `npm start`. |
+| **APM Server** (optional) | For traces/metrics to be sent to Elastic APM, configure `Shared/Resources/agent-conf.json` with your APM Server URL (and optional auth). |
 
 ## Running with opbeans-node
 
-### 1. Start the backend (opbeans-node on port 3000)
+### 1. Start the backend
 
-**Option A — Full Elastic stack (typical for integration testing)**  
-
-From a clone of [apm-integration-testing](https://github.com/elastic/apm-integration-testing):
-
-```bash
-./scripts/compose.py start \
-  --with-opbeans-node \
-  --with-opbeans-rum \
-  main
-```
-
-Only the opbeans-related flags are required; the compose setup brings up the rest of the stack (APM Server, Elasticsearch, Kibana, etc.) by default.
-
-**Option B — opbeans-node alone**  
-
-Follow [opbeans-node](https://github.com/elastic/opbeans-node): install dependencies, set `PG*` / Redis env vars as needed, run `npm run db-setup` then `npm start`. By default the API listens on **port 3000**.
+Follow **[opbeans-node](https://github.com/elastic/opbeans-node)** to install dependencies, configure PostgreSQL and Redis, run `npm run db-setup`, then `npm start`. By default the API listens on **port 3000**.
 
 ### 2. Point the iOS app at the API
 
@@ -41,7 +26,7 @@ On the **iOS Simulator**, `localhost` refers to your Mac, so `http://localhost:3
 
 ### 3. Configure the Elastic APM agent (optional)
 
-`Shared/opbeans-swift-App.swift` loads **`Shared/Resources/agent-conf.json`** at startup (`url` for the APM Server, optional `token`). Adjust these values for your environment (for example `http://localhost:8200` when using the stack from apm-integration-testing).
+`Shared/opbeans-swift-App.swift` loads **`Shared/Resources/agent-conf.json`** at startup (`url` for the APM Server, optional `token`). Point `url` at wherever your APM Server is reachable (for example a local or cloud deployment).
 
 ### 4. Build and run in Xcode
 
@@ -54,17 +39,12 @@ Confirm the API responds (e.g. open `http://localhost:3000` in a browser) before
 
 ## Related docs
 
-- **[GETTING-STARTED.md](./GETTING-STARTED.md)** — Prerequisites and stack-oriented setup notes.
+- **[GETTING-STARTED.md](./GETTING-STARTED.md)** — Prerequisites and setup notes.
 - **[scripts/README.md](./scripts/README.md)** — Command-line load generator and `xcodebuild` destinations.
 
 ### Data generation
 
-Data generation TBD.
-
-[//]: # (use `./script/generate-data.py` to prep and run `ios-integration-testing` with a random selection of attributes from the files in `./scripts/data` applied to the Resources object.)
+[//]: # (use `./script/generate-data.py` to prep with a random selection of attributes from the files in `./scripts/data` applied to the Resources object.)
 
 [//]: # ()
-[//]: # (`generate-data.py` accepts a several parameters to set app installation destination, and collector / opbeans configurations. A list of possible desinations can be provided by `xcodebuild -showdestinations`.  The default value is `"platform=iOS Simulator,name=iPad &#40;8th generation&#41;"` more details can be found calling `python3 ./script/generate-data.py -h`.)
-
-[//]: # ()
-[//]: # (Agent configuration must be done through `ios-integration-testing` for this script.)
+[//]: # (`generate-data.py` accepts parameters for app installation destination and collector / opbeans settings. List destinations with `xcodebuild -showdestinations`. More details: `python3 ./script/generate-data.py -h`.)
